@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Truth I Can't Say</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --bg-color: #fdfdfd;
-            --text-color: #334155;
-            --accent-color: #94a3b8;
-            --fade-speed: 1.2s;
+            --bg-start: #fff7e6; /* สีเหลืองอ่อนครีม */
+            --bg-end: #ffe6f2;   /* สีชมพูอ่อนละมุน */
+            --card-bg: rgba(255, 255, 255, 0.7); /* การ์ดโปร่งแสง */
+            --text-color: #5d4037; /* สีน้ำตาลอบอุ่น */
+            --accent-color: #ffab91; /* ส้มอมชมพู */
+            --soft-text: #a1887f; /* เทาอมน้ำตาล */
+            --border-radius-soft: 20px; /* ความโค้งมน */
+            --transition-speed: 0.8s;
         }
 
         * { box-sizing: border-box; }
@@ -18,7 +23,9 @@
         body {
             margin: 0;
             font-family: 'Kanit', sans-serif;
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite; /* พื้นหลังเคลื่อนไหวเบาๆ */
             color: var(--text-color);
             display: flex;
             justify-content: center;
@@ -28,95 +35,151 @@
             overflow: hidden;
         }
 
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         #app {
             width: 100%;
-            max-width: 500px;
-            padding: 30px;
+            max-width: 550px;
+            padding: 20px;
             text-align: center;
         }
 
         .screen {
             display: none;
-            opacity: 0;
-            transition: opacity var(--fade-speed) ease-in-out;
             flex-direction: column;
             align-items: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease-in-out;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-soft);
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* เงาฟุ้งๆ */
         }
 
-        .screen.active {
-            display: flex;
+        .screen.active { 
+            display: flex; 
             opacity: 1;
         }
 
-        .fade-in-text {
-            animation: textFocus 2.5s ease-out;
+        h1 { 
+            font-size: 1.8rem; 
+            font-weight: 300; 
+            color: var(--text-color); 
+            margin-bottom: 1rem; 
+            letter-spacing: 1px;
         }
 
-        @keyframes textFocus {
-            0% { filter: blur(8px); opacity: 0; }
-            100% { filter: blur(0); opacity: 1; }
+        h2 { 
+            font-size: 1.3rem; 
+            font-weight: 300; 
+            line-height: 1.6; 
+            margin-bottom: 2rem; 
+            color: var(--text-color);
+            min-height: 4em; /* กันข้อความกระโดด */
         }
 
-        h1 { font-size: 1.6rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 2rem; color: var(--text-color); }
-        h2 { font-size: 1.2rem; font-weight: 300; line-height: 1.8; margin-bottom: 2rem; color: #475569; min-height: 3.6em; }
+        p { 
+            font-weight: 200; 
+            color: var(--soft-text); 
+            line-height: 1.6; 
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 3px;
+            margin-bottom: 30px;
+        }
+
+        #progress {
+            width: 0%;
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        #category-label {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
 
         textarea {
             width: 100%;
-            height: 100px;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #e2e8f0;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius-soft); /* กลมมน */
             color: var(--text-color);
-            padding: 10px;
+            padding: 15px;
             font-family: 'Kanit', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             resize: none;
+            margin-bottom: 30px;
             outline: none;
             text-align: center;
-            margin-bottom: 40px;
-            transition: border-color 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05); /* เงาจางๆ ด้านใน */
+            transition: all 0.3s;
         }
 
-        textarea:focus { border-bottom: 1px solid var(--accent-color); }
+        textarea:focus { 
+            border-color: var(--accent-color); 
+            background: white;
+            box-shadow: 0 0 15px rgba(255, 171, 145, 0.3); /* เงาสีเดียวกับ accent */
+        }
 
         button {
-            background: transparent;
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-            padding: 10px 35px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.4s;
-            font-family: 'Kanit', sans-serif;
-            letter-spacing: 1px;
-        }
-
-        button:hover {
-            background: var(--accent-color);
+            background-color: var(--accent-color);
             color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: var(--border-radius-soft); /* กลมมน */
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Kanit', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 171, 145, 0.4); /* เงาปุ่ม */
         }
 
-        .progress-indicator {
-            font-size: 0.75rem;
-            color: #cbd5e1;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+        button:hover { 
+            opacity: 0.9; 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 171, 145, 0.5); 
         }
 
-        .category-text {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            margin-bottom: 20px;
-            font-weight: 200;
+        .btn-skip {
+            background: transparent;
+            color: var(--soft-text);
+            text-decoration: underline;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            box-shadow: none; /* ไม่มีเงา */
+        }
+
+        .btn-skip:hover {
+            color: var(--text-color);
+            background: transparent;
+            transform: none;
         }
 
         .controls { display: flex; gap: 20px; align-items: center; }
 
+        /* ปรับสไตล์ Iframe ให้เข้ากับเว็บ */
         iframe {
+            border-radius: var(--border-radius-soft); /* กลมมน */
+            background: rgba(255, 255, 255, 0.8);
             margin-top: 15px;
-            border: 1px solid #f1f5f9;
-            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            filter: none; /* ให้ Google Form เป็นสีสว่างตามเว็บ */
         }
     </style>
 </head>
@@ -124,72 +187,79 @@
 
     <div id="app">
         <section id="screen-start" class="screen active">
-            <h1 class="fade-in-text">The Truth I Can't Say</h1>
-            <h2 class="fade-in-text">พื้นที่ตอบคำถามกับตัวเองเงียบๆ<br>โดยไม่โดนตัดสิน</h2>
-            <button onclick="nextScreen('screen-quiz')">เริ่มสำรวจ</button>
+            <h1>The Truth I Can't Say</h1>
+            <p>ที่นี่คือพื้นที่เงียบๆ ให้คุณได้ตอบคำถามกับตัวเอง... <br>ไม่มีการตัดสิน ไม่มีการบันทึกตัวตน</p>
+            <button onclick="nextScreen('screen-quiz')">เริ่มสำรวจใจตัวเอง</button>
         </section>
 
         <section id="screen-quiz" class="screen">
-            <div class="progress-indicator" id="progress-text">1 / 32</div>
-            <div class="category-text" id="category-label">หมวดหมู่</div>
-            <h2 id="question-text">...</h2>
-            <textarea id="answer-input" placeholder="พิมพ์สิ่งที่อยู่ในใจ..."></textarea>
+            <div class="progress-bar"><div id="progress"></div></div>
+            <span id="category-label">หมวดหมู่</span>
+            <h2 id="question-text">คำถามจะปรากฏที่นี่</h2>
+            <textarea id="answer-input" placeholder="พื้นที่ของคุณ พิมพ์อะไรก็ได้ที่อยากบอกตัวเอง..."></textarea>
             <div class="controls">
-                <button style="border:none; color:#cbd5e1;" onclick="nextQuestion()">ข้ามข้อนี้</button>
-                <button onclick="nextQuestion()">ไปต่อ</button>
+                <button class="btn-skip" onclick="nextQuestion()">ข้ามข้อนี้</button>
+                <button onclick="nextQuestion()">ข้อถัดไป</button>
             </div>
         </section>
 
         <section id="screen-end" class="screen">
-            <h2 style="min-height: auto;">ขอบคุณที่กล้าซื่อสัตย์กับใจตัวเอง</h2>
-            <p style="font-size: 0.9rem; color: #94a3b8;">อยากฝากอะไรทิ้งไว้ไหม?</p>
-            <div style="width: 100%;">
-                <iframe src="https://docs.google.com/forms/d/e/XXXXX/viewform?embedded=true" width="100%" height="400" frameborder="0">กำลังโหลด…</iframe>
+            <h2>ขอบคุณที่ซื่อสัตย์กับตัวเอง</h2>
+            <p>แค่คุณกล้าหยุดคิดและกล้าตอบคำถามเหล่านี้ <br>นั่นคือก้าวสำคัญของการดูแลตัวเองแล้วนะ</p>
+            
+            <div style="width: 100%; margin-top: 10px;">
+                <p style="font-size: 0.9rem; color: var(--soft-text);">อยากฝากอะไรทิ้งไว้ไหม? (คอมเมนต์นี้จะส่งถึงเรา)</p>
+                <iframe 
+                    src="https://forms.gle/9fysEnT76Vnacu497" 
+                    width="100%" 
+                    height="400" 
+                    frameborder="0">กำลังโหลด…</iframe>
             </div>
-            <button onclick="nextScreen('screen-thanks')" style="margin-top: 25px;">ดูข้อความสุดท้าย</button>
+
+            <button onclick="nextScreen('screen-thanks')" style="margin-top: 20px;">ดูข้อความสุดท้าย</button>
         </section>
 
         <section id="screen-thanks" class="screen">
-            <h1 style="font-size: 1.2rem;">เราจะอยู่ตรงนี้เสมอ</h1>
-            <h2>ขอให้ใจดีกับตัวเองให้เหมือนกับที่ใจดีกับคนอื่นนะ</h2>
-            <button onclick="location.reload()">กลับไปจุดเริ่มต้น</button>
+            <h2>เราจะอยู่ตรงนี้เสมอ</h2>
+            <p>เมื่อไหร่ที่ใจวุ่นวาย กลับมาหาคำตอบที่นี่ได้ทุกเมื่อ <br>ขอให้วันนี้เป็นวันที่ใจดีกับคุณนะ</p>
+            <button onclick="location.reload()">กลับหน้าแรก</button>
         </section>
     </div>
 
     <script>
         const questions = [
-            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "ตอนนี้ในใจคุณกำลังรู้สึกอะไรอยู่มากที่สุด" },
-            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "ถ้าความรู้สึกตอนนี้พูดได้ มันอยากบอกอะไรคุณ" },
-            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "วันนี้มีช่วงไหนที่คุณรู้สึกเป็นตัวเองมากที่สุด" },
-            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "มีความรู้สึกอะไรที่คุณพยายามไม่รับฟังมันอยู่ไหม" },
-            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "ถ้าไม่ต้องเก่ง ไม่ต้องเข้มแข็ง คุณอยากเป็นแบบไหน" },
-            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "เวลาต้องตัดสินใจ คุณมักฟังเสียงใครมากที่สุด" },
-            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "มีการตัดสินใจเรื่องไหนที่ยังค้างอยู่ในใจคุณ" },
-            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "ถ้าคุณเลือกเพื่อตัวเองจริงๆ ผลลัพธ์อาจต่างจากตอนนี้ไหม" },
-            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "อะไรทำให้คุณลังเลเวลาจะเลือกบางอย่าง" },
-            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "ถ้าไม่มีใครผิดหวัง คุณอยากเลือกอะไร" },
-            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "เวลาคุณอยู่กับคนอื่น คุณรู้สึกเป็นตัวเองแค่ไหน" },
-            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "มีใครบางคนที่คุณอยากพูดความจริงกับเขาไหม" },
-            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "คุณรู้สึกสบายใจกับความเงียบในความสัมพันธ์หรือเปล่า" },
-            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "ตอนนี้คุณให้ความสำคัญกับความรู้สึกของใครมากที่สุด" },
-            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "คุณเคยรู้สึกว่าต้องเป็นคนเดิมเพื่อให้ใครสักคนอยู่ไหม" },
-            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "มีความคาดหวังอะไรที่คุณแบกไว้โดยไม่รู้ตัว" },
-            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "สิ่งที่คุณพยายามทำอยู่ตอนนี้ เป็นของคุณจริงๆ ไหม" },
-            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "คุณกลัวอะไรที่สุด ถ้าคุณเลือกต่างจากคนอื่น" },
-            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "ถ้าคุณไม่ต้องพิสูจน์อะไรกับใคร ชีวิตจะเบาลงไหม" },
-            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "มีอะไรที่คุณอยากปล่อยวาง แต่ยังทำไม่ได้" },
-            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "ครั้งสุดท้ายที่คุณใจดีกับตัวเองคือเมื่อไหร่" },
-            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "ตอนเหนื่อย คุณมักทำอะไรเป็นอย่างแรก" },
-            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "ร่างกายหรือใจคุณกำลังต้องการอะไรในตอนนี้" },
-            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "คุณอนุญาตให้ตัวเองพักโดยไม่รู้สึกผิดบ้างไหม" },
-            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "ถ้าคุณดูแลตัวเองเหมือนดูแลคนที่รัก มันจะต่างไหม" },
-            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "ตอนนี้อะไรในชีวิตที่คุณอยากรักษาไว้" },
-            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "มีอะไรเล็กๆ ที่ทำให้คุณยังอยากตื่นขึ้นมาในทุกวัน" },
-            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "ถ้าคุณไม่ต้องรีบ ชีวิตคุณจะเป็นจังหวะแบบไหน" },
-            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "อนาคตแบบไหนที่คุณไม่อยากเสียตัวเองไป" },
-            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "วันนี้ คุณอยากขอบคุณตัวเองเรื่องอะไร" },
-            { cat: "คำถามส่งท้าย", q: "เวลารู้สึกไม่โอเค เรามักเลือกอยู่กับมัน หรือพยายามหนีมัน เพราะอะไร" },
-            { cat: "คำถามส่งท้าย", q: "ถ้าวันนี้ไม่ต้องเก่ง ไม่ต้องดี เราอยากเป็นแบบไหน" }
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "1. ตอนนี้ในใจคุณกำลังรู้สึกอะไรอยู่มากที่สุด" },
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "2. ถ้าความรู้สึกตอนนี้พูดได้ มันอยากบอกอะไรคุณ" },
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "3. วันนี้มีช่วงไหนที่คุณรู้สึกเป็นตัวเองมากที่สุด" },
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "4. มีความรู้สึกอะไรที่คุณพยายามไม่รับฟังมันอยู่ไหม" },
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "5. ถ้าไม่ต้องเก่ง ไม่ต้องเข้มแข็ง คุณอยากเป็นแบบไหน" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "6. เวลาต้องตัดสินใจ คุณมักฟังเสียงใครมากที่สุด" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "7. มีการตัดสินใจเรื่องไหนที่ยังค้างอยู่ในใจคุณ" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "8. ถ้าคุณเลือกเพื่อตัวเองจริงๆ ผลลัพธ์อาจต่างจากตอนนี้ไหม" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "9. อะไรทำให้คุณลังเลเวลาจะเลือกบางอย่าง" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "10. ถ้าไม่มีใครผิดหวัง คุณอยากเลือกอะไร" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "11. เวลาคุณอยู่กับคนอื่น คุณรู้สึกเป็นตัวเองแค่ไหน" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "12. มีใครบางคนที่คุณอยากพูดความจริงกับเขาไหม" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "13. คุณรู้สึกสบายใจกับความเงียบในความสัมพันธ์หรือเปล่า" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "14. ตอนนี้คุณให้ความสำคัญกับความรู้สึกของใครมากที่สุด" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "15. คุณเคยรู้สึกว่าต้องเป็นคนเดิมเพื่อให้ใครสักคนอยู่ไหม" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "16. มีความคาดหวังอะไรที่คุณแบกไว้โดยไม่รู้ตัว" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "17. สิ่งที่คุณพยายามทำอยู่ตอนนี้ เป็นของคุณจริงๆ ไหม" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "18. คุณกลัวอะไรที่สุด ถ้าคุณเลือกต่างจากคนอื่น" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "19. ถ้าคุณไม่ต้องพิสูจน์อะไรกับใคร ชีวิตจะเบาลงไหม" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "20. มีอะไรที่คุณอยากปล่อยวาง แต่ยังทำไม่ได้" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "21. ครั้งสุดท้ายที่คุณใจดีกับตัวเองคือเมื่อไหร่" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "22. ตอนเหนื่อย คุณมักทำอะไรเป็นอย่างแรก" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "23. ร่างกายหรือใจคุณกำลังต้องการอะไรในตอนนี้" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "24. คุณอนุญาตให้ตัวเองพักโดยไม่รู้สึกผิดบ้างไหม" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "25. ถ้าคุณดูแลตัวเองเหมือนดูแลคนที่รัก มันจะต่างไหม" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "26. ตอนนี้อะไรในชีวิตที่คุณอยากรักษาไว้" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "27. มีอะไรเล็กๆ ที่ทำให้คุณยังอยากตื่นขึ้นมาในทุกวัน" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "28. ถ้าคุณไม่ต้องรีบ ชีวิตคุณจะเป็นจังหวะแบบไหน" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "29. อนาคตแบบไหนที่คุณไม่อยากเสียตัวเองไป" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "30. วันนี้ คุณอยากขอบคุณตัวเองเรื่องอะไร" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "31. เวลารู้สึกไม่โอเค เรามักเลือกอยู่กับมัน หรือพยายามหนีมัน เพราะอะไร" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "32. ถ้าวันนี้ไม่ต้องเก่ง ไม่ต้องดี เราอยากเป็นแบบไหน" }
         ];
 
         let currentIdx = 0;
@@ -204,22 +274,23 @@
                 next.classList.add('active');
                 setTimeout(() => { next.style.opacity = 1; }, 50);
                 if(screenId === 'screen-quiz') showQuestion();
-            }, 1000); 
+            }, 800);
         }
 
         function showQuestion() {
             const q = questions[currentIdx];
             const qText = document.getElementById('question-text');
-            const catText = document.getElementById('category-label');
             
-            qText.classList.remove('fade-in-text');
-            void qText.offsetWidth; 
-            qText.classList.add('fade-in-text');
-            
-            qText.innerText = q.q;
-            catText.innerText = q.cat;
-            document.getElementById('progress-text').innerText = `${currentIdx + 1} / ${questions.length}`;
+            qText.style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('category-label').innerText = q.cat;
+                qText.innerText = q.q;
+                qText.style.opacity = 1;
+            }, 400);
+
             document.getElementById('answer-input').value = "";
+            const progress = ((currentIdx + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + "%";
         }
 
         function nextQuestion() {
