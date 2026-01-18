@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Truth I Can't Say</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #334155;
+            --accent-color: #94a3b8;
+            --fade-speed: 1.2s;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+            opacity: 0;
+            transition: opacity var(--fade-speed) ease-in-out;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .screen.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .fade-in-text {
+            animation: textFocus 2.5s ease-out;
+        }
+
+        @keyframes textFocus {
+            0% { filter: blur(8px); opacity: 0; }
+            100% { filter: blur(0); opacity: 1; }
+        }
+
+        h1 { font-size: 1.6rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 2rem; color: var(--text-color); }
+        h2 { font-size: 1.2rem; font-weight: 300; line-height: 1.8; margin-bottom: 2rem; color: #475569; min-height: 3.6em; }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #e2e8f0;
+            color: var(--text-color);
+            padding: 10px;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.1rem;
+            resize: none;
+            outline: none;
+            text-align: center;
+            margin-bottom: 40px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus { border-bottom: 1px solid var(--accent-color); }
+
+        button {
+            background: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 10px 35px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.4s;
+            font-family: 'Kanit', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .progress-indicator {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .category-text {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            font-weight: 200;
+        }
+
+        .controls { display: flex; gap: 20px; align-items: center; }
+
+        iframe {
+            margin-top: 15px;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <section id="screen-start" class="screen active">
+            <h1 class="fade-in-text">The Truth I Can't Say</h1>
+            <h2 class="fade-in-text">พื้นที่ตอบคำถามกับตัวเองเงียบๆ<br>โดยไม่โดนตัดสิน</h2>
+            <button onclick="nextScreen('screen-quiz')">เริ่มสำรวจ</button>
+        </section>
+
+        <section id="screen-quiz" class="screen">
+            <div class="progress-indicator" id="progress-text">1 / 32</div>
+            <div class="category-text" id="category-label">หมวดหมู่</div>
+            <h2 id="question-text">...</h2>
+            <textarea id="answer-input" placeholder="พิมพ์สิ่งที่อยู่ในใจ..."></textarea>
+            <div class="controls">
+                <button style="border:none; color:#cbd5e1;" onclick="nextQuestion()">ข้ามข้อนี้</button>
+                <button onclick="nextQuestion()">ไปต่อ</button>
+            </div>
+        </section>
+
+        <section id="screen-end" class="screen">
+            <h2 style="min-height: auto;">ขอบคุณที่กล้าซื่อสัตย์กับใจตัวเอง</h2>
+            <p style="font-size: 0.9rem; color: #94a3b8;">อยากฝากอะไรทิ้งไว้ไหม?</p>
+            <div style="width: 100%;">
+                <iframe src="https://docs.google.com/forms/d/e/XXXXX/viewform?embedded=true" width="100%" height="400" frameborder="0">กำลังโหลด…</iframe>
+            </div>
+            <button onclick="nextScreen('screen-thanks')" style="margin-top: 25px;">ดูข้อความสุดท้าย</button>
+        </section>
+
+        <section id="screen-thanks" class="screen">
+            <h1 style="font-size: 1.2rem;">เราจะอยู่ตรงนี้เสมอ</h1>
+            <h2>ขอให้ใจดีกับตัวเองให้เหมือนกับที่ใจดีกับคนอื่นนะ</h2>
+            <button onclick="location.reload()">กลับไปจุดเริ่มต้น</button>
+        </section>
+    </div>
+
+    <script>
+        const questions = [
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "ตอนนี้ในใจคุณกำลังรู้สึกอะไรอยู่มากที่สุด" },
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "ถ้าความรู้สึกตอนนี้พูดได้ มันอยากบอกอะไรคุณ" },
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "วันนี้มีช่วงไหนที่คุณรู้สึกเป็นตัวเองมากที่สุด" },
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "มีความรู้สึกอะไรที่คุณพยายามไม่รับฟังมันอยู่ไหม" },
+            { cat: "หมวดที่ 1 : ตัวตน & ความรู้สึก", q: "ถ้าไม่ต้องเก่ง ไม่ต้องเข้มแข็ง คุณอยากเป็นแบบไหน" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "เวลาต้องตัดสินใจ คุณมักฟังเสียงใครมากที่สุด" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "มีการตัดสินใจเรื่องไหนที่ยังค้างอยู่ในใจคุณ" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "ถ้าคุณเลือกเพื่อตัวเองจริงๆ ผลลัพธ์อาจต่างจากตอนนี้ไหม" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "อะไรทำให้คุณลังเลเวลาจะเลือกบางอย่าง" },
+            { cat: "หมวดที่ 2 : การตัดสินใจ", q: "ถ้าไม่มีใครผิดหวัง คุณอยากเลือกอะไร" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "เวลาคุณอยู่กับคนอื่น คุณรู้สึกเป็นตัวเองแค่ไหน" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "มีใครบางคนที่คุณอยากพูดความจริงกับเขาไหม" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "คุณรู้สึกสบายใจกับความเงียบในความสัมพันธ์หรือเปล่า" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "ตอนนี้คุณให้ความสำคัญกับความรู้สึกของใครมากที่สุด" },
+            { cat: "หมวดที่ 3 : ความสัมพันธ์", q: "คุณเคยรู้สึกว่าต้องเป็นคนเดิมเพื่อให้ใครสักคนอยู่ไหม" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "มีความคาดหวังอะไรที่คุณแบกไว้โดยไม่รู้ตัว" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "สิ่งที่คุณพยายามทำอยู่ตอนนี้ เป็นของคุณจริงๆ ไหม" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "คุณกลัวอะไรที่สุด ถ้าคุณเลือกต่างจากคนอื่น" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "ถ้าคุณไม่ต้องพิสูจน์อะไรกับใคร ชีวิตจะเบาลงไหม" },
+            { cat: "หมวดที่ 4 : ความคาดหวัง & แรงกดดัน", q: "มีอะไรที่คุณอยากปล่อยวาง แต่ยังทำไม่ได้" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "ครั้งสุดท้ายที่คุณใจดีกับตัวเองคือเมื่อไหร่" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "ตอนเหนื่อย คุณมักทำอะไรเป็นอย่างแรก" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "ร่างกายหรือใจคุณกำลังต้องการอะไรในตอนนี้" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "คุณอนุญาตให้ตัวเองพักโดยไม่รู้สึกผิดบ้างไหม" },
+            { cat: "หมวดที่ 5 : การดูแลตัวเอง", q: "ถ้าคุณดูแลตัวเองเหมือนดูแลคนที่รัก มันจะต่างไหม" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "ตอนนี้อะไรในชีวิตที่คุณอยากรักษาไว้" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "มีอะไรเล็กๆ ที่ทำให้คุณยังอยากตื่นขึ้นมาในทุกวัน" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "ถ้าคุณไม่ต้องรีบ ชีวิตคุณจะเป็นจังหวะแบบไหน" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "อนาคตแบบไหนที่คุณไม่อยากเสียตัวเองไป" },
+            { cat: "หมวดที่ 6 : การมองไปข้างหน้า", q: "วันนี้ คุณอยากขอบคุณตัวเองเรื่องอะไร" },
+            { cat: "คำถามส่งท้าย", q: "เวลารู้สึกไม่โอเค เรามักเลือกอยู่กับมัน หรือพยายามหนีมัน เพราะอะไร" },
+            { cat: "คำถามส่งท้าย", q: "ถ้าวันนี้ไม่ต้องเก่ง ไม่ต้องดี เราอยากเป็นแบบไหน" }
+        ];
+
+        let currentIdx = 0;
+
+        function nextScreen(screenId) {
+            const currentActive = document.querySelector('.screen.active');
+            currentActive.style.opacity = 0;
+            
+            setTimeout(() => {
+                currentActive.classList.remove('active');
+                const next = document.getElementById(screenId);
+                next.classList.add('active');
+                setTimeout(() => { next.style.opacity = 1; }, 50);
+                if(screenId === 'screen-quiz') showQuestion();
+            }, 1000); 
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            const qText = document.getElementById('question-text');
+            const catText = document.getElementById('category-label');
+            
+            qText.classList.remove('fade-in-text');
+            void qText.offsetWidth; 
+            qText.classList.add('fade-in-text');
+            
+            qText.innerText = q.q;
+            catText.innerText = q.cat;
+            document.getElementById('progress-text').innerText = `${currentIdx + 1} / ${questions.length}`;
+            document.getElementById('answer-input').value = "";
+        }
+
+        function nextQuestion() {
+            if (currentIdx < questions.length - 1) {
+                currentIdx++;
+                showQuestion();
+            } else {
+                nextScreen('screen-end');
+            }
+        }
+    </script>
+</body>
+</html>
